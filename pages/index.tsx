@@ -1,7 +1,7 @@
 import { Button, TextField, Container, AppBar, Toolbar, Typography, Box } from "@mui/material";
 import React, { useState } from "react";
 import { useRouter } from 'next/router'
-import BasicEmailReputationCard from "./components/BasicEmailReputationCard";
+import BasicEmailReputationCard from "../components/BasicEmailReputationCard";
 import CollapsibleTable from "./components/LeaksTable2";
 import LeaksTable from "./components/LeaksTable";
 import SocailMediaRegistrationsCollapsibleTable from "./components/SocialMediaRegistrations";
@@ -31,8 +31,7 @@ const HomePage: React.FC = () => {
       if (response.status >= 200 && response.status < 300) {
         const data: ApiResponse = await response.json();
         setApiResponse(data);
-        console.log(apiResponse.basic_email_reputation.email);
-        console.log(typeof(apiResponse.leaks));
+
       } else {
         setResponseMessage('Failed to submit email');
       }
