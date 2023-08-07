@@ -2,9 +2,9 @@ import { Button, TextField, Container, AppBar, Toolbar, Typography, Box } from "
 import React, { useState } from "react";
 import { useRouter } from 'next/router'
 import BasicEmailReputationCard from "../components/BasicEmailReputationCard";
-import CollapsibleTable from "./components/LeaksTable2";
-import LeaksTable from "./components/LeaksTable";
-import SocailMediaRegistrationsCollapsibleTable from "./components/SocialMediaRegistrations";
+import LeaksTable from "../components/LeaksTable";
+import SocailMediaRegistrationsCollapsibleTable from "../components/SocialMediaRegistrations";
+
 
 const HomePage: React.FC = () => {
   const [email, setEmail] = useState("");
