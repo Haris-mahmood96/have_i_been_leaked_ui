@@ -1,4 +1,4 @@
-import { Button, TextField, Container, AppBar, Toolbar, Typography, Box } from "@mui/material";
+import { Button, TextField, Container, AppBar, Toolbar, Typography, Box, CircularProgress } from "@mui/material";
 import React, { useState } from "react";
 import { useRouter } from 'next/router'
 import BasicEmailReputationCard from "../components/BasicEmailReputationCard";
@@ -8,13 +8,16 @@ import SocailMediaRegistrationsCollapsibleTable from "../components/SocialMediaR
 
 const HomePage: React.FC = () => {
   const [email, setEmail] = useState("");
-  const [responseMessage, setResponseMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [apiResponse, setApiResponse] = useState<ApiResponse | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
+    setApiResponse(null);
     const formData = new FormData();
     formData.append('email', email);
     try {
@@ -25,21 +28,23 @@ const HomePage: React.FC = () => {
         },
         body: formData,
       });
-  
-     
+
+
 
       if (response.status >= 200 && response.status < 300) {
         const data: ApiResponse = await response.json();
         setApiResponse(data);
-
       } else {
-        setResponseMessage('Failed to submit email');
+        setErrorMessage('Failed to submit email');
       }
     } catch (error) {
       console.error('Failed to submit email:', error);
-      setResponseMessage('Failed to submit email');
+      setErrorMessage('Failed to submit email');
+    } finally {
+      setLoading(false);
     }
-    
+
+
     // use Next.js's router to navigate to results page with query parameter
     // router.push({
     //   pathname: '/results',
@@ -73,13 +78,18 @@ const HomePage: React.FC = () => {
           </Button>
         </form>
       </Container>
-      {apiResponse &&  (
+      {loading && (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <CircularProgress />
+        </div>
+      )}
+      {apiResponse && !loading && (
         <Container maxWidth="sm" sx={{ mt: 3 }}>
-        <BasicEmailReputationCard reputation={apiResponse.basic_email_reputation} />        
-        <LeaksTable leaks={apiResponse.leaks}></LeaksTable>
-        <SocailMediaRegistrationsCollapsibleTable data={apiResponse.social_media_registrations}></SocailMediaRegistrationsCollapsibleTable>
+          <BasicEmailReputationCard reputation={apiResponse.basic_email_reputation} />
+          <LeaksTable leaks={apiResponse.leaks}></LeaksTable>
+          <SocailMediaRegistrationsCollapsibleTable data={apiResponse.social_media_registrations}></SocailMediaRegistrationsCollapsibleTable>
         </Container>
-    )}
+      )}
     </Box>
   );
 };
